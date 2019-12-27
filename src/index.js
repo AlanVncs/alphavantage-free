@@ -63,6 +63,9 @@ async function setData(symbol){
 }
 
 async function writeCSV(table){
+
+    fs.unlinkSync(CSV_FILE);
+
     // Escreve o cabeçalho
     writeText('Data');
     symbols.forEach(symbol => {
