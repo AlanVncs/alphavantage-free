@@ -1,5 +1,10 @@
 const fs = require('fs');
-const app = require('express')();
+const express = require('express');
+const app = express();
+
+const PORT = '9002';
+
+// app.use(express.static('public'));
  
 app.get('/cota.csv', function (req, res) {
     fs.readFile('cota.csv', (err, data) => {
@@ -7,6 +12,8 @@ app.get('/cota.csv', function (req, res) {
         res.type('text/plain; charset=utf-8');
         res.send(data.toString());
     });
-})
- 
-app.listen(9001);
+});
+
+app.listen(PORT);
+
+module.exports = app;

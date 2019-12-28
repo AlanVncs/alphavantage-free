@@ -1,7 +1,7 @@
 const fs = require('fs');
 const AV_KEY = process.env.AV_KEY;
 const alpha = require('alphavantage')({AV_KEY});
-const symbols = ['^BVSP', 'ALPA4.SA', 'AMAR3.SA', 'ARZZ3.SA', 'BBAS3.SA', 'BBDC3.SA', 'BBDC4.SA', 'BOVA11.SA', 'CAML3.SA', 'CMIG4.SA', 'COGN3.SA', 'CPFE3.SA', 'CPLE6.SA', 'CSMG3.SA', 'CSNA3.SA', 'CYRE3.SA', 'DTEX3.SA', 'EGIE3.SA', 'ENBR3.SA', 'ENEV3.SA', 'ENGI11.SA', 'EQTL3.SA', 'EQTL3.SA', 'FESA4.SA', 'FLRY3.SA', 'GGBR4.SA', 'GOAU3.SA', 'GOLL4.SA', 'GRND3.SA', 'GUAR3.SA', 'ITSA4.SA', 'ITUB3.SA', 'ITUB4.SA', 'JHSF3.SA', 'LREN3.SA', 'MDIA3.SA', 'MRVE3.SA', 'MULT3.SA', 'ODPV3.SA', 'OFSA3.SA', 'PARD3.SA', 'QUAL3.SA', 'RADL3.SA', 'RENT3.SA', 'SANB11.SA', 'SAPR4.SA', 'SBSP3.SA', 'SEER3.SA', 'SMTO3.SA', 'TEND3.SA', 'TRIS3.SA', 'TRPL4.SA', 'USIM3.SA', 'VIVT4.SA', 'VULC3.SA', 'WEGE3.SA', 'YDUQ3.SA'];
+const symbols = ['^BVSP', 'ALPA4', 'AMAR3', 'ARZZ3', 'BBAS3', 'BBDC3', 'BBDC4', 'BOVA11', 'CAML3', 'CMIG4', 'COGN3', 'CPFE3', 'CPLE6', 'CSMG3', 'CSNA3', 'CYRE3', 'DTEX3', 'EGIE3', 'ENBR3', 'ENEV3', 'ENGI11', 'EQTL3', 'FESA4', 'FLRY3', 'GGBR4', 'GOAU3', 'GOLL4', 'GRND3', 'GUAR3', 'ITSA4', 'ITUB3', 'ITUB4', 'JHSF3', 'LREN3', 'MDIA3', 'MRVE3', 'MULT3', 'ODPV3', 'OFSA3', 'PARD3', 'QUAL3', 'RADL3', 'RENT3', 'SANB11', 'SAPR4', 'SBSP3', 'SEER3', 'SMTO3', 'TEND3', 'TRIS3', 'TRPL4', 'USIM3', 'VIVT4', 'VULC3', 'WEGE3', 'YDUQ3'];
 
 const CSV_FILE = 'cota.csv';
 
@@ -27,7 +27,7 @@ async function pullData(index = 0){
 
     if(index < symbols.length - 5){
         var timeNow = Date.now();
-        while((timeNow - startTime) < 65000){
+        while((timeNow - startTime) < 70000){
             timeNow = Date.now();
         }
         pullData(index + 5);
@@ -46,7 +46,7 @@ async function pullData(index = 0){
 async function setData(symbol){
     if(symbol){
         try {
-            const data = await alpha.data.daily_adjusted(symbol, "full", "json");
+            const data = await alpha.data.daily_adjusted((symbol == '^BVSP')?symbol:(symbol + '.SA'), "full", "json");
             var hist = data['Time Series (Daily)'];
             for (var key in hist){
                 if(!table[key]){
@@ -63,8 +63,13 @@ async function setData(symbol){
 }
 
 async function writeCSV(table){
-
-    fs.unlinkSync(CSV_FILE);
+    try{
+        fs.unlinkSync(CSV_FILE);
+    }
+    catch(e){
+        console.log('Alert: Arquivo ' + CSV_FILE + ' não existe');
+        console.log('Criando...');
+    }
 
     // Escreve o cabeçalho
     writeText('Data');
