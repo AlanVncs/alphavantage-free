@@ -3,7 +3,7 @@ const updater = require('./updater');
 const express = require('express');
 const app = express();
 
-const PORT = '9001';
+const PORT = '80';
 
 app.use(express.static('public'));
 app.use(express.static('files'));
@@ -35,7 +35,12 @@ app.get('/update', function(req, res){
 });
 
 app.get('/status', function(req, res){
-    var lastUpdate = fs.readFileSync("lastUpdate");
+    try{
+        var lastUpdate = fs.readFileSync("lastUpdate");
+    }
+    catch(e){
+        var lastUpdate = "Nunca"
+    }
     res.json({
         updating: updating,
         taxa: taxa,
