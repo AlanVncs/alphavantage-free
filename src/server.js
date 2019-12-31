@@ -27,6 +27,7 @@ app.get('/update', function(req, res){
                 backupCopy('div.csv');
                 backupCopy('split.csv');
                 updating = false;
+                fs.writeFileSync("lastUpdate", getDate());
             }
         });
     }
@@ -34,10 +35,11 @@ app.get('/update', function(req, res){
 });
 
 app.get('/status', function(req, res){
+    var lastUpdate = fs.readFileSync("lastUpdate");
     res.json({
         updating: updating,
         taxa: taxa,
-        lastUpdate: 'TODO'
+        lastUpdate: lastUpdate.toString()
     });
 });
 
@@ -63,4 +65,10 @@ async function backupCopy(fileName){
             }
         }
     }
+}
+
+function getDate(){
+    var date = new Date();
+    date.setHours(date.getHours() - 1);
+    return date.toLocaleString();
 }
