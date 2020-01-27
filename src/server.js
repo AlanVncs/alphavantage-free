@@ -74,5 +74,6 @@ async function backupCopy(fileName){
 
 function getDate(){
     var date = new Date();
+    date.setHours(date.getHours()-3); // Brazil
     return date.toUTCString();
 }
