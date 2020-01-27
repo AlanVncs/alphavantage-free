@@ -74,6 +74,5 @@ async function backupCopy(fileName){
 
 function getDate(){
     var date = new Date();
-    date.setHours(date.getHours() - 1);
-    return date.toLocaleString();
+    return date.toUTCString();
 }
