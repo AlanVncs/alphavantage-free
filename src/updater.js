@@ -34,7 +34,7 @@ async function pullData(index = 0, callback){
     }
     else{
         newTable = {};
-        Object.keys(table).sort().forEach(key => { // Ordena as datas
+        Object.keys(table).sort(dateCmp).forEach(key => { // Ordena as datas
             if(key > '2009-12-31'){ // Retira datas anteriores a 2010
                 newTable[key] = table[key];
             }
@@ -42,6 +42,10 @@ async function pullData(index = 0, callback){
         writeCSV(newTable);
         callback(1);
     }
+}
+
+function dateCmp(date1, date2){
+    return (date1<date2)?1:-1;
 }
 
 async function setData(symbol){
